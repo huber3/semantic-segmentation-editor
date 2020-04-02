@@ -14,6 +14,7 @@ import SseZoom from "./SseZoom.js";
 import FileSaver from "file-saver";
 import SseMsg from "../../common/SseMsg";
 import $ from "jquery";
+import SseCircleTool from "./tools/SseCircleTool";
 
 export default class SseEditor2d extends React.Component {
     constructor(props) {
@@ -726,7 +727,7 @@ export default class SseEditor2d extends React.Component {
             }
 
             if (accept && this.pendingSegment)
-            // Rejects first point snapping if not a polygon with at least 3 vertices
+                // Rejects first point snapping if not a polygon with at least 3 vertices
                 accept = accept &&
                     (ht.item != this.pendingSegment.path || (ht.segment && ht.segment.index == 0 &&
                         ht.segment.path.segments.length > 3));
@@ -871,6 +872,7 @@ export default class SseEditor2d extends React.Component {
 
         this.cutTool.remove();
         this.rectangleTool.remove();
+        this.circleTool.remove();
         this.polygonTool.remove();
         this.snapIndicator = this.snapColor = this.snapPoint = this.snapSegment = null;
         this.setCurrentSample(null);
@@ -989,6 +991,7 @@ export default class SseEditor2d extends React.Component {
         this.onMsg("cut", () => this.cutTool.activate());
         this.onMsg("polygon", () => this.polygonTool.activate());
         this.onMsg("rectangle", () => this.rectangleTool.activate());
+        this.onMsg("circle", () => this.circleTool.activate());
         this.onMsg("flood", () => this.floodTool.activate());
 
 
@@ -1055,6 +1058,7 @@ export default class SseEditor2d extends React.Component {
         this.polygonTool = new SsePolygonTool(this);
         this.pointerTool = new SsePointerTool(this);
         this.cutTool = new SseCutTool(this);
+        this.circleTool = new SseCircleTool(this);
         this.rectangleTool = new SseRectangleTool(this);
         this.floodTool = new SseFloodTool(this);
         $(window).on('resize', this.resizeCanvas.bind(this));
